@@ -5,13 +5,22 @@
 
 ## Selected Case Study / Organisation
 
-> _To be completed._
+### 1. Organisation / Scenario
+Crestfield University is a fictional Nigerian university offering bachelor's degree programmes across multiple faculties and departments. The university operates an academic result management system to manage student registration, course assignments, and academic performance.
 
-- **Organisation / scenario:**
-- **Nature of the business / system:**
-- **Users of the database:**
-- **Major data to be stored:**
-- **Key operations supported:**
+### 2. Nature of the Business / System
+The University Student Result Portal is a relational database system designed to manage students' academic records, course registrations, continuous assessment scores, examination results, and GPA calculations. It provides a centralised platform for maintaining academic information and ensuring accurate, consistent, and traceable result management.
+
+### 3. Users of the Database
+- **Students:** Register for courses, view their results, and monitor their academic performance.
+- **Lecturers:** Enter and upload continuous assessment and examination scores for courses assigned to them.
+- **Academic Administrators:** Manage student records, courses, academic sessions, lecturer assignments, and other academic information.
+
+### 4. Major Data to Be Stored
+The database stores information about faculties, departments, academic programmes, students, lecturers, user accounts, courses, academic sessions, semesters, course registrations, student scores, grade scales, academic results, carry-over courses, lecturer assignment history, and grade change audit logs.
+
+### 5. Key Operations Supported
+The system supports student registration, semester course registration subject to a maximum of 24 credit units including carry-over courses, lecturer assignment, score entry using a fixed 40% continuous assessment and 60% examination structure, result computation, five-point grading and GPA calculation, carry-over registration with a maximum of two attempts, lecturer-restricted grade entry and modification, and audit logging of grade changes and lecturer assignment changes.
 
 ## Portfolio Contents
 
