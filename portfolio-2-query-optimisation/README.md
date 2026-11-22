@@ -92,4 +92,60 @@ The reasons for these differences are discussed in the Notes / Analysis section 
 
 ## Notes / Analysis
 
-> _To be completed._
+### Performance Analysis
+
+The purpose of these demonstrations was to examine how indexes affect query execution in PostgreSQL. I compared the execution plans before and after creating the indexes to see whether PostgreSQL could retrieve records more efficiently.
+
+#### 1. Composite Index on `course_registration`
+
+Before creating the index, PostgreSQL had to scan the `course_registration` table to find records matching the selected course and semester. After creating the composite index on `course_id` and `semester_id`, PostgreSQL could locate the matching records more directly. Execution time fell from 502.690 ms to 4.925 ms, about 102 times faster.
+
+This improved the query because only about 675 rows matched the conditions, compared with approximately 788,000 rows in the table. Rather than checking every row, PostgreSQL could use the index to narrow down the records it needed to retrieve.
+
+The index matches the query exactly because the query filters on both columns. I placed `course_id` first because it narrows the search far more than `semester_id`: there are 481 courses but only 8 semesters.
+
+#### 2. Index on `result.grade_id`
+
+For this demonstration, I created an index on `result.grade_id` to improve the retrieval of students who received an F grade.
+
+However, PostgreSQL did not use the index and continued to perform a sequential scan. Execution time was essentially unchanged: 670.870 ms before and 671.319 ms after. This is because `grade_id` has low selectivity. It has only six distinct values, and F grades account for approximately 8% of the records, which is about 50,000 of the 628,000 results. Since the query needs to retrieve a relatively large number of rows, using the index to locate them would mean jumping around the table to fetch each one, which costs more than reading the table straight through.
+
+This shows that creating an index does not automatically mean PostgreSQL will use it. The query planner considers the estimated cost of different execution plans before choosing one.
+
+#### 3. Index on `student.last_name`
+
+The index on `student.last_name` helped PostgreSQL locate approximately 2,400 matching student records more quickly. Execution time fell from 23.367 ms to 10.732 ms, about 2.2 times faster.
+
+Because about 2,400 rows is roughly 5% of all students, PostgreSQL used a bitmap index scan rather than a plain index scan. It first collected the locations of the matching rows from the index, then read them from the table in physical order.
+
+However, the overall improvement was smaller than in the first demonstration. The `student` table is relatively small (50,000 rows), so the sequential scan was already cheap. The query also involved joining the student records to the `programme` table and sorting the results. Although the index reduced the work required to find the matching students, PostgreSQL still had to perform the remaining operations.
+
+This demonstrates that an index can improve one part of a query without necessarily removing the cost of other operations.
+
+#### 4. Indexing Trade-offs
+
+Although the indexes improved some queries, creating and maintaining them also comes with costs.
+
+The index creation times were:
+
+| Index | Build time |
+|---|---:|
+| Composite index on `course_registration` | 1.719 seconds |
+| Index on `result.grade_id` | 1.040 seconds |
+| Index on `student.last_name` | 0.380 seconds |
+
+After creating the indexes, I ran `ANALYZE` (5.137 seconds) so that the query planner had up-to-date statistics when deciding whether to use them.
+
+Indexes also require additional disk space and can make insert, update and delete operations slower because PostgreSQL must maintain the indexes whenever the underlying data changes.
+
+Based on the results, I would keep the composite index on `course_registration` and the index on `student.last_name` because they provided useful improvements to the demonstrated queries.
+
+However, I would not keep the index on `result.grade_id`. PostgreSQL did not use it for the tested query, meaning it provided no measurable benefit in that demonstration while still requiring storage and maintenance. It also took almost three times as long to build as the `last_name` index.
+
+#### 5. Conclusion
+
+The demonstrations showed that indexes can improve query performance, particularly when they help PostgreSQL locate a relatively small number of matching records in a large table.
+
+However, indexing every column is not a good approach. The usefulness of an index depends on the query, the number of matching records, the structure of the data and the execution plan selected by PostgreSQL.
+
+Therefore, indexes should be created based on actual query requirements and performance measurements rather than simply adding indexes to every column.
