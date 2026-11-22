@@ -6,8 +6,8 @@ This folder holds the 2–3 page documentation submitted through the LMS. The ou
 
 ## MIT 8103 Advanced Database Systems – Portfolio Documentation
 
-**Name:** _(student to complete)_
-**Matric number:** _(student to complete)_
+**Name:** Fuad Tayo-Subair
+**Student ID:** 301906879 
 **Course:** MIT 8103 Advanced Database Systems, 2026/2027 First Semester
 **GitHub repository:** https://github.com/ScopeTee/Advanced-Database-Management
 
@@ -52,7 +52,3 @@ _About half a page: the design choices you made and why, the challenges you face
 ### 8. References
 
 See the References section of the main [README](../README.md).
-
-### 9. AI Use Declaration (student to write)
-
-_State the AI tool(s) used, what they were used for, and how you reviewed, tested and verified the output. This must match the declaration in the main README._
