@@ -189,10 +189,10 @@ SELECT
     'CU/' || (2023 + n % 4) || '/' || LPAD(n::TEXT, 5, '0'),
     (ARRAY['Adaeze','Tunde','Zainab','Chukwuma','Bisi','Halima','Ifeanyi',
            'Kemi','Sani','Nkechi','Femi','Amina','Obinna','Tolu','Hauwa',
-           'Kelechi','Segun','Fatima','Uche','Bukola'])[1 + n % 20],
+           'Kelechi','Segun','Fatima','Uche','Bukola'])[1 + FLOOR(RANDOM() * 20)::INT],
     (ARRAY['Okafor','Adeyemi','Abubakar','Nnamdi','Balogun','Ibrahim',
            'Chukwu','Oladipo','Garba','Onyeka','Afolabi','Yusuf','Ezeh',
-           'Ojo','Lawal','Okonkwo','Salami','Mohammed','Ani','Fashola'])[1 + (n / 20) % 20],
+           'Ojo','Lawal','Okonkwo','Salami','Mohammed','Ani','Fashola'])[1 + FLOOR(RANDOM() * 20)::INT],
     a.start_date,
     (2027 - (2023 + n % 4)) * 100
 FROM generate_series(1, 50000) AS n
