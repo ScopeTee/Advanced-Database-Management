@@ -20,7 +20,7 @@ I first designed the ER diagram based on the case study decisions in the main RE
 | `03_constraint_tests.sql` | A verification query and three deliberate constraint violations |
 | `screenshots/` | Evidence from running the scripts |
 
-**Tools used:** dbdiagram.io (ER modelling), PostgreSQL 17 with SQL Shell (psql).
+**Tools used:** dbdiagram.io (ER modelling), PostgreSQL 18 with SQL Shell (psql).
 
 **Main constraints implemented:**
 - CA score between 0 and 40, and exam score between 0 and 60
