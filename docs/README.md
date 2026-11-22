@@ -27,7 +27,7 @@ I generated about 50,000 students and 788,000 registrations, wrote six realistic
 
 ### 4. Portfolio 3 – Transactions and Concurrency
 
-I implemented five triggers for rules that constraints could not enforce: automatic grading, lecturer-only grade changes with an audit log, the 24-unit cap, the carry-over rule and the programme level limit. Demonstrations show COMMIT, ROLLBACK (which also undid the audit-log entry) and automatic rollback after an error. Without a row lock, two concurrent registrations could each pass the unit check and together exceed the 24-unit limit. In a two-session test with `SELECT … FOR UPDATE`, the second session waited for the first to commit and was then rejected at 24 units. The concurrency script also compares the READ COMMITTED and REPEATABLE READ isolation levels.
+I implemented five triggers for rules that constraints could not enforce: automatic grading, lecturer-only grade changes with an audit log, the 24-unit cap, the carry-over rule and the programme level limit. Demonstrations show COMMIT, ROLLBACK (which also undid the audit-log entry) and automatic rollback after an error. Without a row lock, two concurrent registrations could each pass the unit check and together exceed the 24-unit limit. In a two-session test with `SELECT … FOR UPDATE`, the second session waited for the first to commit and was then rejected at 24 units. Under READ COMMITTED, a repeated read in one transaction changed from 20.00 to 21.00 after another session committed; under REPEATABLE READ it stayed at 21.00 until the transaction ended.
 
 
 ### 5. Portfolio 4 – NoSQL and Advanced Data Models

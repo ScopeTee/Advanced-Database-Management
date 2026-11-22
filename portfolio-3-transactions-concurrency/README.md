@@ -54,13 +54,18 @@ The application identifies the user for each transaction with `set_config('app.u
 | `10-demo5-grade-corrected.png` | Demo 5: setting grade A on a total of 38 | Accepted as `UPDATE 1`, but the trigger recalculated the grade |
 | `10b-helper-after-demos.png` | Check after the demos | CA 18, exam 20, total 38, **F**, **1** audit entry. Demo 1 was saved, Demo 2's rollback also removed its audit entry, and Demo 5's grade A was corrected to F |
 
-**Concurrency control**
+**Concurrency and isolation**
 
 | Screenshot | Step | Result |
 |---|---|---|
 | `12-partB-tabB-waiting.png` | Part B: with `FOR UPDATE` | Tab B's registration **waited** ("Waiting for the query to complete… 00:00:21") while Tab A held the lock on the student's row |
 | `13-partB-tabB-rejected.png` | Part B: after Tab A commits | Tab B was rejected: "Registration rejected: 24 units already registered, adding 3 would exceed the 24-unit limit" |
 | `13b-partB-24-units.png` | Part B: final check | 24 units, 8 courses: the rule held |
+| `14a-partC-rc-first-read.png` | Part C: READ COMMITTED, first read | Exam score **20.00** |
+| `14b-partC-rc-second-read.png` | Part C: READ COMMITTED, after Session B committed +1 | Exam score **21.00** in the same transaction: a non-repeatable read |
+| `15a-partC-rr-first-read.png` | Part C: REPEATABLE READ, first read | Exam score **21.00** |
+| `15b-partC-rr-second-read.png` | Part C: REPEATABLE READ, after Session B committed +1 | Still **21.00**: the transaction reads from its snapshot |
+| `15c-partC-rr-after-commit.png` | Part C: after Session A committed | **22.00**: the change is visible once the transaction ends |
 
 ## Notes / Analysis
 
@@ -80,4 +85,4 @@ I used `SELECT … FOR UPDATE` to lock the student's row before the trigger coun
 
 ### 4. Isolation Levels
 
-Isolation levels control how much one transaction is affected by other transactions running at the same time. Under READ COMMITTED, PostgreSQL's default, each query sees data committed before it started, so running the same query twice in one transaction can return different results if another user commits in between. Under REPEATABLE READ, the transaction works from a snapshot taken at its first query, so repeated reads stay the same. A lower isolation level allows more concurrency but can expose transactions to inconsistent reads. A higher isolation level provides stronger protection but may reduce performance or cause transactions to be retried. For operations like course registration and grading, I would prioritise correctness over speed.
+Isolation levels control how much one transaction is affected by other transactions running at the same time. Under READ COMMITTED, PostgreSQL's default, each query sees data committed before it started, so running the same query twice in one transaction can return different results if another user commits in between. Under REPEATABLE READ, the transaction works from a snapshot taken at its first query, so repeated reads stay the same. In my test, under READ COMMITTED the exam score read 20.00 and then 21.00 in the same transaction after another session committed a change. Under REPEATABLE READ it read 21.00 both times, and only showed 22.00 after my transaction committed. A lower isolation level allows more concurrency but can expose transactions to inconsistent reads. A higher isolation level provides stronger protection but may reduce performance or cause transactions to be retried. For operations like course registration and grading, I would prioritise correctness over speed.
