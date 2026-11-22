@@ -1,6 +1,6 @@
 # Final Documentation
 
-This folder holds the 2–3 page documentation submitted through the LMS. The outline below is the structure of that document. Sections marked **(student to write)** are the individual parts and are completed by the student before export to PDF.
+This folder holds the 2–3 page documentation submitted through the LMS. The outline below is the structure of that document. The individual reflection and AI use declaration are written by the student.
 
 ---
 
@@ -45,9 +45,17 @@ The Atlas cluster is a 3-node replica set on AWS, Paris (eu-west-3). `db.hello()
 
 *Suggested screenshots:* `02-p2-read-preference.png` and `05-atlas-cluster-overview.png`
 
-### 7. Individual Technical Reflection (student to write)
+### 7. Individual Technical Reflection
 
-_About half a page: the design choices you made and why, the challenges you faced (for example the MySQL-to-PostgreSQL syntax, the `\i` path errors, the pgAdmin transaction states, the two data-generation flaws found during testing), and what you learned about indexing, transactions, NoSQL modelling and replication._
+1. **A design choice I'd defend:** I kept `grade_id` in the results table instead of calculating it every time because it makes it easier to store and retrieve the grade awarded to a student. I also kept the lecturer on the course row and used a separate history log to track changes without losing the current lecturer information.
+
+2. **The hardest problem I hit, and how I got past it:** One of the challenges was getting the MySQL script to work in PostgreSQL, since some of the syntax was different. I also had issues with Windows file paths and pgAdmin transactions, but I worked through them by correcting the commands and restarting aborted transactions.
+
+3. **Something that surprised me:** I was surprised that PostgreSQL could ignore an index I had created and still choose a sequential scan. I also learned that two transactions can each pass a validation check but still break a rule when they run at the same time.
+
+4. **What I learned about choosing between databases:** I learned that the choice of database depends on what the system needs most. PostgreSQL is better for registration and grading because of its constraints and transaction support, while MongoDB is useful for retrieving complete transcripts with fewer reads.
+
+5. **What I'd do differently with more time:** I would start earlier and commit my work more consistently instead of leaving too much until the end. I would also build a small front-end to make the database work easier to demonstrate and test.
 
 ### 8. References
 
