@@ -58,7 +58,6 @@ The application identifies the user for each transaction with `set_config('app.u
 
 | Screenshot | Step | Result |
 |---|---|---|
-| `11-partA-race-27-units.png` *(to be added)* | Part A: no lock | Both sessions registered a 3-unit course while the student had 21 units, giving **27 units**: the 24-unit rule was broken |
 | `12-partB-tabB-waiting.png` | Part B: with `FOR UPDATE` | Tab B's registration **waited** ("Waiting for the query to complete… 00:00:21") while Tab A held the lock on the student's row |
 | `13-partB-tabB-rejected.png` | Part B: after Tab A commits | Tab B was rejected: "Registration rejected: 24 units already registered, adding 3 would exceed the 24-unit limit" |
 | `13b-partB-24-units.png` | Part B: final check | 24 units, 8 courses: the rule held |
