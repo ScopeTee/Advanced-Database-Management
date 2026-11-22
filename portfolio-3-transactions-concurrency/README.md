@@ -67,4 +67,20 @@ The application identifies the user for each transaction with `set_config('app.u
 
 ## Notes / Analysis
 
-> _To be completed._
+### 1. ACID
+
+ACID is important because it helps make sure database transactions are reliable. In my result portal, a transaction should either complete fully or not happen at all. For example, when registering a student for a course, the database should not save only part of the registration. This helps keep the data accurate and consistent.
+
+My demos show each property. **Atomicity:** in Demo 2, the rollback undid both the score change and its audit-log entry, and in Demo 3 one failed insert cancelled the whole transaction, including the valid first insert. **Consistency:** the triggers and constraints rejected invalid changes, such as a lecturer editing a course they do not teach and a level above the programme maximum (Demo 4). **Isolation:** concurrent transactions are kept apart, as shown in the concurrency and isolation tests. **Durability:** once Demo 1 was committed, the change and its audit entry remained saved.
+
+### 2. Race Condition
+
+A race condition can happen when two users try to update the same data at almost the same time. For example, two registration requests could check a student's available units before either one saves the new course. Both requests might pass the check, causing the student to exceed the 24-unit limit. This happens because neither transaction can see the other's uncommitted registration, so both calculate 21 + 3 = 24 units. This shows why checking the rule alone is not enough when multiple transactions run together.
+
+### 3. `FOR UPDATE`
+
+I used `SELECT … FOR UPDATE` to lock the student's row before the trigger counts their registered units. Because every registration for that student must take the same lock first, a second registration has to wait until the first transaction finishes. In my test, Tab B's registration waited while Tab A held the lock. When Tab A committed, Tab B continued, counted the new total of 24 units, and was rejected. Once the transaction commits or rolls back, the lock is released. The cost is that users registering at the same moment may wait briefly.
+
+### 4. Isolation Levels
+
+Isolation levels control how much one transaction is affected by other transactions running at the same time. Under READ COMMITTED, PostgreSQL's default, each query sees data committed before it started, so running the same query twice in one transaction can return different results if another user commits in between. Under REPEATABLE READ, the transaction works from a snapshot taken at its first query, so repeated reads stay the same. A lower isolation level allows more concurrency but can expose transactions to inconsistent reads. A higher isolation level provides stronger protection but may reduce performance or cause transactions to be retried. For operations like course registration and grading, I would prioritise correctness over speed.
