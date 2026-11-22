@@ -54,15 +54,13 @@ The application identifies the user for each transaction with `set_config('app.u
 | `10-demo5-grade-corrected.png` | Demo 5: setting grade A on a total of 38 | Accepted as `UPDATE 1`, but the trigger recalculated the grade |
 | `10b-helper-after-demos.png` | Check after the demos | CA 18, exam 20, total 38, **F**, **1** audit entry. Demo 1 was saved, Demo 2's rollback also removed its audit entry, and Demo 5's grade A was corrected to F |
 
-**Concurrency and isolation**
+**Concurrency control**
 
 | Screenshot | Step | Result |
 |---|---|---|
 | `12-partB-tabB-waiting.png` | Part B: with `FOR UPDATE` | Tab B's registration **waited** ("Waiting for the query to complete… 00:00:21") while Tab A held the lock on the student's row |
 | `13-partB-tabB-rejected.png` | Part B: after Tab A commits | Tab B was rejected: "Registration rejected: 24 units already registered, adding 3 would exceed the 24-unit limit" |
 | `13b-partB-24-units.png` | Part B: final check | 24 units, 8 courses: the rule held |
-| `14-partC-read-committed.png` *(to be added)* | Part C: READ COMMITTED | Tab A read two different exam scores in one transaction (non-repeatable read) |
-| `15-partC-repeatable-read.png` *(to be added)* | Part C: REPEATABLE READ | Tab A read the same score both times, despite Tab B's committed change |
 
 ## Notes / Analysis
 
