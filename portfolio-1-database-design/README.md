@@ -6,15 +6,61 @@ Case study description, ER diagram, relational schema, keys, constraints, and no
 
 ## Implementation
 
-> _To be completed._
+This folder contains the design and initial implementation of the Crestfield University Student Result Portal database.
+
+I first designed the ER diagram based on the case study decisions in the main README, then converted it into DBML using dbdiagram.io. From that, I wrote the PostgreSQL schema, added sample data, and tested the constraints.
+
+| File | Purpose |
+|---|---|
+| `er-diagram.webp` | My ER diagram showing the 15 entities, keys and relationships |
+| `er-diagram-dbdiagram.webp` | The same model rendered from DBML in dbdiagram.io |
+| `schema.dbml` | Text version of the ER model, including keys, constraints and defaults |
+| `01_schema.sql` | PostgreSQL script that creates the 15 tables with primary keys, foreign keys, UNIQUE and CHECK constraints, and a generated `total_score` column |
+| `02_sample_data.sql` | Sample records, including a student who failed CSC101 and registered for a second attempt |
+| `03_constraint_tests.sql` | A verification query and three deliberate constraint violations |
+| `screenshots/` | Evidence from running the scripts |
+
+**Tools used:** dbdiagram.io (ER modelling), PostgreSQL 17 with SQL Shell (psql).
+
+**Main constraints implemented:**
+- CA score between 0 and 40, and exam score between 0 and 60
+- A maximum of two attempts per course, with no duplicate attempt numbers
+- Unique matric numbers, staff numbers, course codes and email addresses
+- Valid levels (100–500), roles, statuses and grade ranges
+- `total_score` generated automatically from CA + exam
 
 ## How to Run / Test
 
-> _To be completed._
+1. Open SQL Shell (psql) and create the database:
+   ```sql
+   CREATE DATABASE crestfield_university;
+   \c crestfield_university
+   ```
+2. Run the schema script. Use forward slashes in the path.
+   ```sql
+   \i 'C:/path/to/portfolio-1-database-design/01_schema.sql'
+   ```
+   Run `\dt` to confirm that 15 tables were created.
+3. Load the sample data:
+   ```sql
+   \i 'C:/path/to/portfolio-1-database-design/02_sample_data.sql'
+   ```
+4. Open `03_constraint_tests.sql` and run each block **one at a time**: the verification query first, then tests 1 to 3. Each test should fail with the error noted in its comment.
+
+The scripts assume an empty database. To start again, run `DROP DATABASE crestfield_university;` from the `postgres` database, then repeat from step 1.
 
 ## Results and Evidence
 
-> _To be completed (outputs, screenshots, logs)._
+| Screenshot | What it shows |
+|---|---|
+| `screenshots/01-schema-created.png` | `01_schema.sql` running successfully, with 15 `CREATE TABLE` statements |
+| `screenshots/02-tables-list.png` | `\dt` listing all 15 tables |
+| `screenshots/03-test1-exam-score.png` | An exam score of 75 rejected by `chk_exam_score` |
+| `screenshots/04-test2-third-attempt.png` | A third attempt rejected by `chk_attempt_number` |
+| `screenshots/05-test3-duplicate-matric.png` | A duplicate matric number rejected by `student_matric_number_key` |
+| `screenshots/06-verification-carry-over.png` | The carry-over case: attempt 1 scored 35 (F) in the first semester, and attempt 2 is registered in the second semester with no result yet |
+
+All three constraint tests produced the expected errors, which confirms that the database itself rejects invalid data, not just the application. The `DETAIL` line in test 1 also shows that `total_score` had already been calculated as 95.00 with grade F attached. This is the grade mismatch I describe in the Known Limitations section below.
 
 ## Notes / Analysis
 
