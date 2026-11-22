@@ -78,4 +78,8 @@ The system supports student registration, semester course registration subject t
 
 ## AI Use Declaration
 
-> _To be completed: tool(s) used, what they were used for, and how the output was reviewed, tested, and verified._
+**AI tool used:** Claude (Anthropic), through Claude Code.
+
+**What it was used for:** explaining concepts and guiding the setup of PostgreSQL, pgAdmin, MongoDB Atlas and Compass; reviewing my case-study decisions and ER diagram, and converting the diagram into DBML; reviewing and correcting my PostgreSQL schema and checking my sample data and constraint tests; drafting the bulk-data script, revising my queries and drafting the CGPA ranking query (Portfolio 2); drafting the triggers and the transaction, concurrency and isolation demos (Portfolio 3); drafting the MongoDB setup, query and replication scripts (Portfolios 4 and 5); drafting the factual README sections and checking my written analyses for technical accuracy; and managing the Git commits.
+
+**How the output was reviewed, tested and verified:** the case-study rules and design decisions were my own, and the AI reviewed and questioned them. I ran every script myself on my own PostgreSQL 18 installation and MongoDB Atlas cluster, and the screenshots are from those runs. I compared each output with the expected result, and where they differed the cause was investigated and corrected, for example two data-generation flaws found during testing and a MySQL-to-PostgreSQL syntax fix. The analysis sections were written by me, then checked for technical accuracy.
