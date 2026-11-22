@@ -199,7 +199,7 @@ FROM generate_series(1, 50000) AS n
 JOIN user_account u ON u.email = 'student' || n || '@crestfield.edu.ng'
 JOIN academic_session a ON a.session_name = (2023 + n % 4) || '/' || (2024 + n % 4)
 JOIN programme p ON p.programme_name = 'BSc ' ||
-     (SELECT dept_name FROM dept_seed ORDER BY dept_code OFFSET (n % 20) LIMIT 1);
+     (SELECT dept_name FROM dept_seed ORDER BY dept_code OFFSET ((n / 4) % 20) LIMIT 1);
 
 
 -- -----------------------------------------------------
